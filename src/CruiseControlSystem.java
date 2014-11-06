@@ -51,4 +51,16 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 		}
 		lastcar = car;
 	}
+	public static void main(String[] args){
+		//get input
+		// while car == running
+		//get input
+		// think about doing something
+		// do that something
+		// wait for pulse
+		// loop
+		// turn off ccs slowly or immidatly 
+		// smile.
+		
+	}
 }
