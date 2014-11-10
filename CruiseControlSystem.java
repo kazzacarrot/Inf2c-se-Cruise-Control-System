@@ -9,16 +9,26 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	 * necessary. Public ones should not be necessary (there is no
 	 * rule against it, but you should not be changing the support code
 	 * and the rest of the code knows only about this).
-	 */	
-		Car lastcar = null;
-		double speedstore = 0.0;
-		
-		public void pulse(Car car){
+	 */
+	
+	public boolean isCCSOn;
+	public boolean isAccelerating;
+	public double  storedSpeedValue;
+	public double currentSpeedValue;
+	public double Throttle_Position;
+	private double speedStore;
+	public Car lastcar;
+	public  CruiseControlSystem () {
+		// inialise a ccs
+		this.speedStore = 0.0;
+	}
+	public void pulse(Car car){
 		if (car.engine_sensor.is_engine_on()) {	
-			
 			if (car.brake_pedal.is_brake_on()) {
 				if (car.dashboard.get_start_ccs()) {
-					//update
+					car.dashboard.set_start_ccs(false);
+					car.throttle.setThrottlePosition(0.0);
+					
 				}
 			}
 			if (car.dashboard.get_start_ccs()) {
@@ -28,10 +38,10 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			}
 			if (car.dashboard.get_stop_ccs()) {
 				//update unconditionally.
-				speedstore= car.speed_sensor.get_speed();
+				speedStore= car.speed_sensor.get_speed();
 			}
 			if (car.dashboard.get_resume()) {
-				if (speedstore>=40.0) {
+				if (speedStore>=40.0) {
 					//update
 				} else {
 					if (car.speed_sensor.get_speed()>=40.0) {
@@ -45,18 +55,44 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			if (car.dashboard.get_start_accelerating()) {
 				//update
 			}
-			
+			//These methods are for when somthing on in lastcar is now turned off
 			if (lastcar!=null) {
 				if (lastcar.dashboard.get_start_accelerating()&&!car.dashboard.get_start_accelerating()){
+
+					//update for when start accelerating turned off
+				}
+				if (lastcar.dashboard.get_start_ccs()&&!car.dashboard.get_start_ccs()) {
+					//update for when CCS is turned off
+
 				//update for when start accelerating turned off
 				}
 				if (lastcar.dashboard.get_start_ccs()&&!car.dashboard.get_start_ccs()) {
 				//update for when CCS is turned off
 				}
+
 				}
 		} else {
 			//update 0's and falses.
 		}
+		//We can use this to identify if no changes are made, If no changes are made during a pulse, The ouput is "-"
+		if (lastcar!=null) {
+			if (car.accelerator_pedal.get_accelerator()==lastcar.accelerator_pedal.get_accelerator()) {
+			//	car.accelerator_pedal Dunno, how but update state to "-"
+			}
+			// Another if statment for every test if last car is same as current car.
+		}
 		lastcar = car;
+	}
+	public static void main(String[] args){
+		//get input
+		// while car == running
+		//get input
+		// think about doing something
+		// do that something
+		// wait for pulse
+		// loop
+		// turn off ccs slowly or immidatly 
+		// smile.
+		
 	}
 }

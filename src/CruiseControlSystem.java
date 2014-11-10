@@ -26,7 +26,9 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 		if (car.engine_sensor.is_engine_on()) {	
 			if (car.brake_pedal.is_brake_on()) {
 				if (car.dashboard.get_start_ccs()) {
-					//update
+					car.dashboard.set_start_ccs(false);
+					car.throttle.setThrottlePosition(0.0);
+					
 				}
 			}
 			if (car.dashboard.get_start_ccs()) {
@@ -71,6 +73,13 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 				}
 		} else {
 			//update 0's and falses.
+		}
+		//We can use this to identify if no changes are made, If no changes are made during a pulse, The ouput is "-"
+		if (lastcar!=null) {
+			if (car.accelerator_pedal.get_accelerator()==lastcar.accelerator_pedal.get_accelerator()) {
+			//	car.accelerator_pedal Dunno, how but update state to "-"
+			}
+			// Another if statment for every test if last car is same as current car.
 		}
 		lastcar = car;
 	}
