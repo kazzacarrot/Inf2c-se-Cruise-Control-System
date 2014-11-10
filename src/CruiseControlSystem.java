@@ -18,7 +18,9 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	
 	public CruiseControlSystem
 	
-		public void pulse(Car car){
+	Car lastcar = null;
+	double speedstore = 0.0;
+	public void pulse(Car car){
 		if (car.engine_sensor.is_engine_on()) {		
 			if (car.brake_pedal.is_brake_on()) {
 				//update
@@ -47,10 +49,13 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			if (car.dashboard.get_start_accelerating()) {
 				//update
 			}
-			
+			//These methods are for when somthing on in lastcar is now turned off
 			if (lastcar!=null) {
-				if (lastcar.dashboard.get_stop_accelerating()&&!car.dashboard.get_stop_accelerating()) {
-					//method for updating when stop accelerting turned off
+				if (lastcar.dashboard.get_start_accelerating()&&!car.dashboard.get_start_accelerating()){
+					//update for when start accelerating turned off
+				}
+				if (lastcar.dashboard.get_start_ccs()&&!car.dashboard.get_start_ccs()) {
+					//update for when CCS is turned off
 				}
 			}
 		} else {
