@@ -10,9 +10,9 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	 * rule against it, but you should not be changing the support code
 	 * and the rest of the code knows only about this).
 	 */
-	+ isCCSOn : boolean
-	+ isAccelerating : boolean
-	+ storedSpeedValue:  real
+	public boolean isCCSOn
+    public boolean isAccelerating
+	public double  storedSpeedValue
 	public double currentSpeedValue
 	public double Throttle_Position
 	
