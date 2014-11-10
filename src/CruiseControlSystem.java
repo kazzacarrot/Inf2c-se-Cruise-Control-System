@@ -11,7 +11,7 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	 * and the rest of the code knows only about this).
 	 */
 	public boolean isCCSOn
-    public boolean isAccelerating
+	public boolean isAccelerating
 	public double  storedSpeedValue
 	public double currentSpeedValue
 	public double Throttle_Position
