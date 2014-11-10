@@ -17,7 +17,7 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	public double currentSpeedValue;
 	public double Throttle_Position;
 	private double speedStore;
-	
+	public Car lastcar;
 	public  CruiseControlSystem () {
 		// inialise a ccs
 		this.speedStore = 0.0;
@@ -36,10 +36,10 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			}
 			if (car.dashboard.get_stop_ccs()) {
 				//update unconditionally.
-				speedstore= car.speed_sensor.get_speed();
+				speedStore= car.speed_sensor.get_speed();
 			}
 			if (car.dashboard.get_resume()) {
-				if (speedstore>=40.0) {
+				if (speedStore>=40.0) {
 					//update
 				} else {
 					if (car.speed_sensor.get_speed()>=40.0) {
@@ -56,35 +56,23 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			//These methods are for when somthing on in lastcar is now turned off
 			if (lastcar!=null) {
 				if (lastcar.dashboard.get_start_accelerating()&&!car.dashboard.get_start_accelerating()){
-<<<<<<< HEAD
+
 					//update for when start accelerating turned off
 				}
 				if (lastcar.dashboard.get_start_ccs()&&!car.dashboard.get_start_ccs()) {
 					//update for when CCS is turned off
-=======
+
 				//update for when start accelerating turned off
 				}
 				if (lastcar.dashboard.get_start_ccs()&&!car.dashboard.get_start_ccs()) {
 				//update for when CCS is turned off
 				}
->>>>>>> Scotts_Branch
+
 				}
 		} else {
 			//update 0's and falses.
 		}
 		lastcar = car;
-	}
-	public static void main(String[] args){
-		//get input
-		// while car == running
-		//get input
-		// think about doing something
-		// do that something
-		// wait for pulse
-		// loop
-		// turn off ccs slowly or immidatly 
-		// smile.
-		
 	}
 	public static void main(String[] args){
 		//get input
