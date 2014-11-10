@@ -10,6 +10,14 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	 * rule against it, but you should not be changing the support code
 	 * and the rest of the code knows only about this).
 	 */
+	public boolean isCCSOn
+	public boolean isAccelerating
+	public double  storedSpeedValue
+	public double currentSpeedValue
+	public double Throttle_Position
+
+	
+	public CruiseControlSystem
 	
 	Car lastcar = null;
 	double speedstore = 0.0;
@@ -55,5 +63,29 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			//update 0's and falses.
 		}
 		lastcar = car;
+	}
+	public static void main(String[] args){
+		//get input
+		// while car == running
+		//get input
+		// think about doing something
+		// do that something
+		// wait for pulse
+		// loop
+		// turn off ccs slowly or immidatly 
+		// smile.
+		
+	}
+	public static void main(String[] args){
+		//get input
+		// while car == running
+		//get input
+		// think about doing something
+		// do that something
+		// wait for pulse
+		// loop
+		// turn off ccs slowly or immidatly 
+		// smile.
+		
 	}
 }
