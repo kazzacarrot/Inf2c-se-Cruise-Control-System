@@ -10,6 +10,13 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	 * rule against it, but you should not be changing the support code
 	 * and the rest of the code knows only about this).
 	 */
+	+ isCCSOn : boolean
+	+ isAccelerating : boolean
+	+ storedSpeedValue:  real
+	public double currentSpeedValue
+	public double Throttle_Position
+	
+	public CruiseControlSystem
 	
 		public void pulse(Car car){
 		if (car.engine_sensor.is_engine_on()) {		
