@@ -18,22 +18,29 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	public double Throttle_Position;
 	private double speedStore;
 	public Car lastcar;
-	public  CruiseControlSystem () {
-		// inialise a ccs
-		this.speedStore = 0.0;
-	}
+
+	public static void main(Car car){
+		storedSpeedValue = 40.0; // makes sense to initialise the stored speed to the minimum speed allowed to turn on the CCS, 40km/h   
+  
+      
+    
 	public void pulse(Car car){
+        // Things should only happen if the engine is running
 		if (car.engine_sensor.is_engine_on()) {	
+            // if the brake is pressed
 			if (car.brake_pedal.is_brake_on()) {
+                //if the CCS is turned on
 				if (car.dashboard.get_start_ccs()) {
+                    // turn off the CCS and give the driver control of the car
 					car.dashboard.set_start_ccs(false);
 					car.throttle.setThrottlePosition(0.0);
-					
 				}
 			}
+            // if the CCS is turned on
 			if (car.dashboard.get_start_ccs()) {
-					if (car.speed_sensor.get_speed()>=40.0 && !car.brake_pedal.is_brake_on()) {
-						//update
+                // 
+				if (car.speed_sensor.get_speed()>=40.0 && !car.brake_pedal.is_brake_on()) {
+					//update
 					}
 			}
 			if (car.dashboard.get_stop_ccs()) {
@@ -43,7 +50,8 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			if (car.dashboard.get_resume()) {
 				if (speedStore>=40.0) {
 					//update
-				} else {
+				} 
+                else {
 					if (car.speed_sensor.get_speed()>=40.0) {
 						//update
 					}
@@ -55,7 +63,7 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			if (car.dashboard.get_start_accelerating()) {
 				//update
 			}
-			//These methods are for when somthing on in lastcar is now turned off
+			//These methods are for when something on in lastcar is now turned off
 			if (lastcar!=null) {
 				if (lastcar.dashboard.get_start_accelerating()&&!car.dashboard.get_start_accelerating()){
 
@@ -70,8 +78,10 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 				//update for when CCS is turned off
 				}
 
-				}
-		} else {
+			}
+		} 
+        // if the engine is not on
+        else {
 			//update 0's and falses.
 		}
 		//We can use this to identify if no changes are made, If no changes are made during a pulse, The ouput is "-"
@@ -81,18 +91,6 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			}
 			// Another if statment for every test if last car is same as current car.
 		}
-		lastcar = car;
-	}
-	public static void main(String[] args){
-		//get input
-		// while car == running
-		//get input
-		// think about doing something
-		// do that something
-		// wait for pulse
-		// loop
-		// turn off ccs slowly or immidatly 
-		// smile.
-		
+		lastcar = car;   
 	}
 }
