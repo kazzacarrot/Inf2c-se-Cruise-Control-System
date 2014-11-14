@@ -11,88 +11,80 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	 * and the rest of the code knows only about this).
 	 */
 	
-	public boolean isCCSOn;
-	public boolean isAccelerating;
-	public double  storedSpeedValue;
-	public double currentSpeedValue;
-	public double Throttle_Position;
-	private double speedStore;
-	public Car lastcar;
-	public  CruiseControlSystem () {
-		// inialise a ccs
-		this.speedStore = 0.0;
-	}
+
+	double currentSpeedValue;
+	double speedStore = 0.0;
+	Car lastcar;
+	
 	public void pulse(Car car){
+		currentSpeedValue = car.speed_sensor.get_speed();
 		if (car.engine_sensor.is_engine_on()) {	
-			if (car.brake_pedal.is_brake_on()) {
-				if (car.dashboard.get_start_ccs()) {
-					car.dashboard.set_start_ccs(false);
-					car.throttle.setThrottlePosition(0.0);
 					
-				}
-			}
-			if (car.dashboard.get_start_ccs()) {
-					if (car.speed_sensor.get_speed()>=40.0 && !car.brake_pedal.is_brake_on()) {
-						//update
-					}
+			if (car.brake_pedal.is_brake_on()) {		
+					car.dashboard.set_start_ccs(false);
+					car.dashboard.set_start_accelerating(false);
+					speedStore= car.speed_sensor.get_speed();
 			}
 			if (car.dashboard.get_stop_ccs()) {
-				//update unconditionally.
+				car.dashboard.set_start_ccs(false);
+				car.dashboard.set_start_accelerating(false);
 				speedStore= car.speed_sensor.get_speed();
 			}
-			if (car.dashboard.get_resume()) {
-				if (speedStore>=40.0) {
-					//update
+			if (car.dashboard.get_stop_accelerating()) {
+				if (!car.dashboard.get_start_accelerating()) {
+					car.dashboard.set_stop_accelerating(false);
 				} else {
-					if (car.speed_sensor.get_speed()>=40.0) {
-						//update
+					car.dashboard.set_start_accelerating(false);
+				}	
+			}
+			if (car.dashboard.get_start_accelerating() && car.dashboard.get_start_ccs()) {
+				car.throttle.setThrottlePosition(currentSpeedValue+7.2/50);
+			}
+			if (car.dashboard.get_start_ccs()) {
+				if (car.speed_sensor.get_speed()>=40.0 && !car.brake_pedal.is_brake_on()) {
+					car.throttle.setThrottlePosition(currentSpeedValue/50);
+				}
+			}
+			if (car.dashboard.get_resume()) {
+				if (speedStore>=40.0 && !car.brake_pedal.is_brake_on() && !car.dashboard.get_start_ccs()) {
+					car.throttle.setThrottlePosition(speedStore/50);
+				} else {
+					if (car.speed_sensor.get_speed()>=40.0 && !car.brake_pedal.is_brake_on()) {
+						car.throttle.setThrottlePosition(currentSpeedValue/50);
 					}
 				}
 			}
-			if (car.dashboard.get_stop_accelerating()) {
-				//update 
-			}
-			if (car.dashboard.get_start_accelerating()) {
-				//update
-			}
-			//These methods are for when somthing on in lastcar is now turned off
-			if (lastcar!=null) {
-				if (lastcar.dashboard.get_start_accelerating()&&!car.dashboard.get_start_accelerating()){
-
-					//update for when start accelerating turned off
-				}
-				if (lastcar.dashboard.get_start_ccs()&&!car.dashboard.get_start_ccs()) {
-					//update for when CCS is turned off
-
-				//update for when start accelerating turned off
-				}
-				if (lastcar.dashboard.get_start_ccs()&&!car.dashboard.get_start_ccs()) {
-				//update for when CCS is turned off
-				}
-
-				}
-		} else {
-			//update 0's and falses.
-		}
-		//We can use this to identify if no changes are made, If no changes are made during a pulse, The ouput is "-"
+			
+		} 
 		if (lastcar!=null) {
-			if (car.accelerator_pedal.get_accelerator()==lastcar.accelerator_pedal.get_accelerator()) {
-			//	car.accelerator_pedal Dunno, how but update state to "-"
+			if (lastcar.dashboard.get_start_ccs()==car.dashboard.get_start_ccs()) {
+				car.dashboard.update_state(new InputState("-"));
 			}
-			// Another if statment for every test if last car is same as current car.
+			if (lastcar.dashboard.get_start_accelerating()==car.dashboard.get_start_accelerating()) {
+				car.dashboard.update_state(new InputState("-"));
+			}
+			if (lastcar.dashboard.get_resume()==car.dashboard.get_resume()) {
+				car.dashboard.update_state(new InputState("-"));
+			}
+			if (lastcar.dashboard.get_stop_accelerating()==car.dashboard.get_stop_accelerating()) {
+				car.dashboard.update_state(new InputState("-"));
+			}
+			if (lastcar.dashboard.get_stop_ccs()==car.dashboard.get_stop_ccs()) {
+				car.dashboard.update_state(new InputState("-"));
+			}
+			if (lastcar.engine_sensor.is_engine_on()==car.engine_sensor.is_engine_on()) {
+				car.engine_sensor.update_state(new InputState("-"));
+			}
+			if (lastcar.accelerator_pedal.get_accelerator()==car.accelerator_pedal.get_accelerator()) {
+				car.accelerator_pedal.update_state(new InputState("-"));
+			}
+			if (lastcar.brake_pedal.get_brake()==car.brake_pedal.get_brake()) {
+				car.brake_pedal.update_state(new InputState("-"));
+			}
+			if (lastcar.speed_sensor.get_speed()==lastcar.speed_sensor.get_speed()) {
+				car.speed_sensor.update_state(new InputState("-"));
+			}
 		}
 		lastcar = car;
-	}
-	public static void main(String[] args){
-		//get input
-		// while car == running
-		//get input
-		// think about doing something
-		// do that something
-		// wait for pulse
-		// loop
-		// turn off ccs slowly or immidatly 
-		// smile.
-		
 	}
 }
