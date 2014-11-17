@@ -60,8 +60,8 @@ public class BasicTests {
     
     @Test
     public void test_command_line(){
-    	String expected = "true 50.000000 0.000000 0.500000 false false false false false 0.500000\n"
-    			+ "true 50.000000 0.000000 0.500000 true false false false false 1.000000";
+    	String expected = "true 50.000000 0.000000 0.5 false false false false false 0.5\n"
+    			+ "true 50.000000 0.000000 0.5 true false false false false 1.000000";
     	String[] arguments = { "test-input-files/simple-input.text" };
     	String actual_output = this.captureOutputOfMain(arguments);
     	assertTrue(expected.equals(actual_output));
