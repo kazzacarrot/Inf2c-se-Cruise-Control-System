@@ -11,7 +11,8 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	 * and the rest of the code knows only about this).
 	 */
 	
-
+	// Karen 2:14pm   17/11/2014
+	
 	double currentSpeedValue;
 	double speedStore = 0.0;
 	Car lastcar;
@@ -56,33 +57,47 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 			}
 			
 		} 
+		// If the car has been turned on already
+			// if the last state of the car is the same as this state, 
+			//then the state of that aspect should be changed to "-"
+		
 		if (lastcar!=null) {
+			// if the last car had cruise control in the same on/off state as this car
 			if (lastcar.dashboard.get_start_ccs()==car.dashboard.get_start_ccs()) {
-				car.dashboard.update_state(new InputState("-"));
+				System.out.println ("last car had CCS in the same state as this one");
+				//car.dashboard.update_state(new InputState("-"));
 			}
 			if (lastcar.dashboard.get_start_accelerating()==car.dashboard.get_start_accelerating()) {
-				car.dashboard.update_state(new InputState("-"));
+				//car.dashboard.update_state(new InputState("-"));
+				System.out.println ("Both cars were accelerating/ not accelerating");
 			}
 			if (lastcar.dashboard.get_resume()==car.dashboard.get_resume()) {
-				car.dashboard.update_state(new InputState("-"));
+				//car.dashboard.update_state(new InputState("-"));
+				System.out.println ("both cars were resuming/ not resuming");
 			}
 			if (lastcar.dashboard.get_stop_accelerating()==car.dashboard.get_stop_accelerating()) {
-				car.dashboard.update_state(new InputState("-"));
+				//car.dashboard.update_state(new InputState("-"));
+				System.out.println ("both cars were stopping acceleration");
 			}
 			if (lastcar.dashboard.get_stop_ccs()==car.dashboard.get_stop_ccs()) {
-				car.dashboard.update_state(new InputState("-"));
+				//car.dashboard.update_state(new InputState("-"));
+				System.out.println ("No change in CCS, on/off state");
 			}
 			if (lastcar.engine_sensor.is_engine_on()==car.engine_sensor.is_engine_on()) {
-				car.engine_sensor.update_state(new InputState("-"));
+				//car.engine_sensor.update_state(new InputState("-"));
+				System.out.println ("No change in engine_on state");
 			}
 			if (lastcar.accelerator_pedal.get_accelerator()==car.accelerator_pedal.get_accelerator()) {
-				car.accelerator_pedal.update_state(new InputState("-"));
+				//car.accelerator_pedal.update_state(new InputState("-"));
+				System.out.println ("no change in accelerator state");
 			}
 			if (lastcar.brake_pedal.get_brake()==car.brake_pedal.get_brake()) {
-				car.brake_pedal.update_state(new InputState("-"));
+				//car.brake_pedal.update_state(new InputState("-"));
+				System.out.println ("no change in brake state");
 			}
 			if (lastcar.speed_sensor.get_speed()==lastcar.speed_sensor.get_speed()) {
-				car.speed_sensor.update_state(new InputState("-"));
+				//car.speed_sensor.update_state(new InputState("-"));
+				System.out.println ("no change in speed");
 			}
 		}
 		lastcar = car;

@@ -38,6 +38,7 @@ public class InputState {
 	}
 	
 	InputState(String input_string){
+	
 		String[] words = input_string.split(" ");
 		this.engine_status = words[0];
 		this.speed_sensor = words[1];
