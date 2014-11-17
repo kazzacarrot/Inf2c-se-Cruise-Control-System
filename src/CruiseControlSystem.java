@@ -49,7 +49,7 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 				car.throttle.setThrottlePosition((CCSspeed+7.2)/50);
 			}
 			if (car.dashboard.get_resume()) {
-				if (speedStore>=40.0 && !car.brake_pedal.is_brake_on() && !car.dashboard.get_start_ccs()) {
+				if (speedStore>=40.0 && !car.brake_pedal.is_brake_on()) {
 					car.throttle.setThrottlePosition(speedStore/50);
 					CCSspeed = speedStore;
 				} else {
