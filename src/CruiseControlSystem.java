@@ -19,12 +19,7 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 		currentSpeedValue = car.speed_sensor.get_speed();
 		if (car.engine_sensor.is_engine_on()) {	
 	
-			if (car.brake_pedal.is_brake_on()) {		
-					car.dashboard.set_start_ccs(false);
-					car.dashboard.set_start_accelerating(false);
-					speedStore= car.speed_sensor.get_speed();
-					CCSspeed=0.0;
-			}
+
 			if (car.dashboard.get_stop_ccs()) {
 				car.dashboard.set_start_ccs(false);
 				car.dashboard.set_start_accelerating(false);
@@ -45,6 +40,12 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 					}
 				}
 			}
+			if (car.brake_pedal.is_brake_on()) {		
+				car.dashboard.set_start_ccs(false);
+				car.dashboard.set_start_accelerating(false);
+				speedStore= car.speed_sensor.get_speed();
+				CCSspeed=0.0;
+		}
 			if (car.dashboard.get_start_accelerating() && car.dashboard.get_start_ccs()) {
 				car.throttle.setThrottlePosition((CCSspeed+7.2)/50);
 			}

@@ -103,7 +103,7 @@ public class BasicTests {
     	// the throttle position should be set by the CCS in at least one
     	// pulse.
     	String[] input_lines = {"true 50.0 1.0 0.5 false false false false false",
-    							 "- - 1.0 - true - - - -"};
+    							 "- - - - true - - - -"};
     	OutputState final_state = get_final_state(input_lines);
     	assertTrue(final_state.get_throttle_position() == 0.5);
     }
