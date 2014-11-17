@@ -60,8 +60,8 @@ public class BasicTests {
     
     @Test
     public void test_command_line(){
-    	String expected = "true 50.000000 0.000000 1.000000 false false false false false 1.000000\n"
-    					+ "true 50.000000 0.000000 1.000000 true false false false false 1.000000";
+    	String expected = "true 50.000000 0.000000 0.500000 false false false false false 0.500000\n"
+    			+ "true 50.000000 0.000000 0.500000 true false false false false 1.000000";
     	String[] arguments = { "test-input-files/simple-input.text" };
     	String actual_output = this.captureOutputOfMain(arguments);
     	assertTrue(expected.equals(actual_output));
@@ -77,7 +77,36 @@ public class BasicTests {
     	OutputState final_state = get_final_state(input_lines);
     	assertTrue(final_state.get_throttle_position() == 1.0);
     }
-    
+    @Test
+    public void test_start_ccsBelow40() {
+    	// Create input such that the CCS should be started and such that
+    	// the throttle position should be set by the CCS in at least one
+    	// pulse.
+    	String[] input_lines = {"true 30.0 0.0 0.5 false false false false false",
+    							 "- - - - true - - - -"};
+    	OutputState final_state = get_final_state(input_lines);
+    	assertTrue(final_state.get_throttle_position() == 0.5);
+    }
+    @Test
+    public void test_start_ccsBelow40andBrakeOn() {
+    	// Create input such that the CCS should be started and such that
+    	// the throttle position should be set by the CCS in at least one
+    	// pulse.
+    	String[] input_lines = {"true 30.0 1.0 0.5 false false false false false",
+    							 "- - - - true - - - -"};
+    	OutputState final_state = get_final_state(input_lines);
+    	assertTrue(final_state.get_throttle_position() == 0.5);
+    }
+    @Test
+    public void test_start_ccsButBrakeOn() {
+    	// Create input such that the CCS should be started and such that
+    	// the throttle position should be set by the CCS in at least one
+    	// pulse.
+    	String[] input_lines = {"true 50.0 1.0 0.5 false false false false false",
+    							 "- - 1.0 - true - - - -"};
+    	OutputState final_state = get_final_state(input_lines);
+    	assertTrue(final_state.get_throttle_position() == 0.5);
+    }
     @Test
     public void test_start_accelerating(){
     	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
@@ -87,6 +116,15 @@ public class BasicTests {
     	// The speed of the car is 50km/h so we should set the throttle position
     	// to a position which reflects 57.2km/h (because 7.2km/h = 2m/s)
     	assertTrue(final_state.get_throttle_position() == 1.1440000000000001);
+    }
+    @Test
+    public void test_start_acceleratingWithoutCCSOn(){
+    	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
+				 				 "- - - - - - true - -"};
+    	OutputState final_state = get_final_state(input_lines);
+    	// The speed of the car is 50km/h so we should set the throttle position
+    	// to a position which reflects 57.2km/h (because 7.2km/h = 2m/s)
+    	assertTrue(final_state.get_throttle_position() == 1.0);
     }
     @Test
     public void test_stop_ccs_ByBrake() {
@@ -133,10 +171,44 @@ public class BasicTests {
    	assertTrue(final_state.get_throttle_position() == 1.5);
     }
     @Test
+    public void test_resumeButBrakeOn() { 
+    	String[] input_lines = { "true 75.0 0.0 1.0 false false false false false",
+			     "- - - - true - - - -",
+				 "- - - - - true - - -",
+			     "- 50.0 1.0 - - - - - true",
+			     "- - - - - - - - -"};
+   	OutputState final_state = get_final_state(input_lines);
+   	System.out.print(final_state.get_throttle_position());
+   	assertTrue(final_state.get_throttle_position() == 1.0);
+    }
+    @Test
+    public void test_resumeButLess40() { 
+    	String[] input_lines = { "true 75.0 0.0 1.0 false false false false false",
+			     "- 30.0 - - - - - - true",
+			     "- - - - - - - - -"};
+   	OutputState final_state = get_final_state(input_lines);
+   	assertTrue(final_state.get_throttle_position() == 1.0);
+    }
+    @Test
     public void test_engineoff() { //If engine is off, ccs remains off if button is pressed.
     	String[] input_lines = { "false 50.0 0.0 1.0 false false false false false",
 			     "- - - 0.0 true - - - -",};
    	OutputState final_state = get_final_state(input_lines);
    	assertTrue(final_state.get_throttle_position() == 0.0);
+    }
+    @Test
+    public void test_unexpectedTerrain () {  //test wether the CCS reacts approprietly to carspeeds unexpected (Via terrain)
+    	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
+			     "- - - 0.0 true - - - -",
+			     "- 42.7 - - - - - - -"};
+  	OutputState final_state = get_final_state(input_lines);
+  	assertTrue(final_state.get_throttle_position() == 1.0);
+    }
+    @Test
+    public void test_resumeWithoutStored () {  //test wether the CCS reacts approprietly to carspeeds unexpected (Via terrain)
+    	String[] input_lines = { "true 75.0 0.0 1.0 false false false false true",
+			     "- - - 0.0 - - - - -",};
+  	OutputState final_state = get_final_state(input_lines);
+  	assertTrue(final_state.get_throttle_position() == 1.5);
     }
 }
