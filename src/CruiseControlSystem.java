@@ -11,7 +11,7 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 	 * and the rest of the code knows only about this).
 	 */
 	
-
+	double CCSspeed = 0.0;
 	double currentSpeedValue;
 	double speedStore = 0.0;
 	
@@ -23,34 +23,43 @@ public class CruiseControlSystem implements ICruiseControlSystem {
 					car.dashboard.set_start_ccs(false);
 					car.dashboard.set_start_accelerating(false);
 					speedStore= car.speed_sensor.get_speed();
+					CCSspeed=0.0;
 			}
 			if (car.dashboard.get_stop_ccs()) {
 				car.dashboard.set_start_ccs(false);
 				car.dashboard.set_start_accelerating(false);
 				speedStore= car.speed_sensor.get_speed();
 				car.dashboard.set_stop_ccs(false);
+				CCSspeed=0.0;
 			}
 			if (car.dashboard.get_stop_accelerating()) {
-				if (!car.dashboard.get_start_accelerating()) {
-					car.dashboard.set_stop_accelerating(false);
-				} else {
 					car.dashboard.set_start_accelerating(false);
-				}	
-			}
-			if (car.dashboard.get_start_accelerating() && car.dashboard.get_start_ccs()) {
-				car.throttle.setThrottlePosition((currentSpeedValue+7.2)/50);
 			}
 			if (car.dashboard.get_start_ccs()) {
 				if (car.speed_sensor.get_speed()>=40.0 && !car.brake_pedal.is_brake_on()) {
-					car.throttle.setThrottlePosition(currentSpeedValue/50);
+					if (CCSspeed<=0.0) {
+						car.throttle.setThrottlePosition(currentSpeedValue/50);
+						CCSspeed=currentSpeedValue;
+					} else {
+						car.throttle.setThrottlePosition(CCSspeed/50);
+					}
 				}
+			}
+			if (car.dashboard.get_start_accelerating() && car.dashboard.get_start_ccs()) {
+				car.throttle.setThrottlePosition((CCSspeed+7.2)/50);
 			}
 			if (car.dashboard.get_resume()) {
 				if (speedStore>=40.0 && !car.brake_pedal.is_brake_on() && !car.dashboard.get_start_ccs()) {
 					car.throttle.setThrottlePosition(speedStore/50);
+					CCSspeed = speedStore;
 				} else {
 					if (car.speed_sensor.get_speed()>=40.0 && !car.brake_pedal.is_brake_on()) {
-						car.throttle.setThrottlePosition(currentSpeedValue/50);
+						if (CCSspeed<=0.0) {
+							car.throttle.setThrottlePosition(currentSpeedValue/50);
+							CCSspeed=currentSpeedValue;
+						} else {
+							car.throttle.setThrottlePosition(CCSspeed/50);
+						}
 					}
 				}
 			}

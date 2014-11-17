@@ -60,8 +60,8 @@ public class BasicTests {
     
     @Test
     public void test_command_line(){
-    	String expected = "true 50.000000 0.000000 1.000000 false false false false false 1.000000\n"
-    					+ "true 50.000000 0.000000 1.000000 true false false false false 1.000000";
+    	String expected = "true 50.000000 0.000000 0.500000 false false false false false 0.500000\n"
+    			+ "true 50.000000 0.000000 0.500000 true false false false false 1.000000";
     	String[] arguments = { "test-input-files/simple-input.text" };
     	String actual_output = this.captureOutputOfMain(arguments);
     	assertTrue(expected.equals(actual_output));
@@ -138,5 +138,20 @@ public class BasicTests {
 			     "- - - 0.0 true - - - -",};
    	OutputState final_state = get_final_state(input_lines);
    	assertTrue(final_state.get_throttle_position() == 0.0);
+    }
+    @Test
+    public void test_unexpectedTerrain () {  //test wether the CCS reacts approprietly to carspeeds unexpected (Via terrain)
+    	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
+			     "- - - 0.0 true - - - -",
+			     "- 42.7 - - - - - - -"};
+  	OutputState final_state = get_final_state(input_lines);
+  	assertTrue(final_state.get_throttle_position() == 1.0);
+    }
+    @Test
+    public void test_resumeWithoutStored () {  //test wether the CCS reacts approprietly to carspeeds unexpected (Via terrain)
+    	String[] input_lines = { "true 75.0 0.0 1.0 false false false false true",
+			     "- - - 0.0 - - - - -",};
+  	OutputState final_state = get_final_state(input_lines);
+  	assertTrue(final_state.get_throttle_position() == 1.5);
     }
 }
