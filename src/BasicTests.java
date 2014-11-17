@@ -68,7 +68,7 @@ public class BasicTests {
     }
     
     @Test
-    public void test_start_ccs() {
+    public void test_start_ccs() { //Test CCS button turns on under correct conditions
     	// Create input such that the CCS should be started and such that
     	// the throttle position should be set by the CCS in at least one
     	// pulse.
@@ -78,7 +78,7 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 1.0);
     }
     @Test
-    public void test_start_ccsBelow40() {
+    public void test_start_ccsBelow40() { //Test ccs does not turn on if speed is less than 40
     	// Create input such that the CCS should be started and such that
     	// the throttle position should be set by the CCS in at least one
     	// pulse.
@@ -88,7 +88,7 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 0.5);
     }
     @Test
-    public void test_start_ccsBelow40andBrakeOn() {
+    public void test_start_ccsBelow40andBrakeOn() { //Test CCS does not turn on if speed is less than 40 and brake is on
     	// Create input such that the CCS should be started and such that
     	// the throttle position should be set by the CCS in at least one
     	// pulse.
@@ -98,7 +98,7 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 0.5);
     }
     @Test
-    public void test_start_ccsButBrakeOn() {
+    public void test_start_ccsButBrakeOn() { //Test CCS does not turn on if brake is on
     	// Create input such that the CCS should be started and such that
     	// the throttle position should be set by the CCS in at least one
     	// pulse.
@@ -108,7 +108,7 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 0.5);
     }
     @Test
-    public void test_start_accelerating(){
+    public void test_start_accelerating(){ //Test the CCS accelerates at 2m/s per second
     	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
 				 			     "- - - - true - - - -",
 				 				 "- - - - - - true - -"};
@@ -118,7 +118,7 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 1.1440000000000001);
     }
     @Test
-    public void test_start_acceleratingWithoutCCSOn(){
+    public void test_start_acceleratingWithoutCCSOn(){ //Test CCS wont accelerate via the accelerate button if CCS is off
     	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
 				 				 "- - - - - - true - -"};
     	OutputState final_state = get_final_state(input_lines);
@@ -127,7 +127,7 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 1.0);
     }
     @Test
-    public void test_stop_ccs_ByBrake() {
+    public void test_stop_ccs_ByBrake() { // Test the CCS switches off if brake pedal is pressed
     	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
 			     "- - - - true - - - -",
 				 "- - 1.0 0.0 - - - - -"};
@@ -135,7 +135,7 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 0.0);
     }
     @Test
-    public void stop_ccs_ByButton() {
+    public void stop_ccs_ByButton() { //Test the CCS switches off if the stop ccs button is pressed
     	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
 			     "- - - - true - - - -",
 				 "- - - 0.0 - true - - -"};
@@ -143,7 +143,7 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 0.0);
     }
     @Test
-    public void test_stop_accelerating_ByBrake() {
+    public void test_stop_accelerating_ByBrake() { //Test the CCS stops accelerating if brake pedal is pressed
     	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
 			     "- - - - true - - - -",
 				 "- - - - - - true - -",
@@ -152,16 +152,16 @@ public class BasicTests {
     	assertTrue(final_state.get_throttle_position() == 0.0);
     }
     @Test
-    public void test_stop_accelerating_ByButton() {
-    	String[] input_lines = { "true 50.0 0.0 1.0 false false false false false",
+    public void test_stop_accelerating_ByButton() {//Test the CCS stops accelerating stop accelerating button is pressed
+    	String[] input_lines = { "true 75.0 0.0 1.0 false false false false false",
 			     "- - - - true - - - -",
 				 "- - - - - - true - -",
 			     "- - - 0.0 - - - true -"};
    	OutputState final_state = get_final_state(input_lines);
-   	assertTrue(final_state.get_throttle_position() == 1.0);
+   	assertTrue(final_state.get_throttle_position() == 1.5);
     }
     @Test
-    public void test_resume() { // if the car has previously stored a speed, we wish to reset the throttle using the resume button
+    public void test_resume() { // Test if the resume button is pressed, car returns to previously stored CCS speed
     	String[] input_lines = { "true 75.0 0.0 1.0 false false false false false",
 			     "- - - - true - - - -",
 				 "- - - - - true - - -",
@@ -171,18 +171,17 @@ public class BasicTests {
    	assertTrue(final_state.get_throttle_position() == 1.5);
     }
     @Test
-    public void test_resumeButBrakeOn() { 
+    public void test_resumeButBrakeOn() {  //Test if the resume button is pressed the car does not turn on CCS as brake is on also.
     	String[] input_lines = { "true 75.0 0.0 1.0 false false false false false",
 			     "- - - - true - - - -",
 				 "- - - - - true - - -",
 			     "- 50.0 1.0 - - - - - true",
 			     "- - - - - - - - -"};
    	OutputState final_state = get_final_state(input_lines);
-   	System.out.print(final_state.get_throttle_position());
    	assertTrue(final_state.get_throttle_position() == 1.0);
     }
     @Test
-    public void test_resumeButLess40() { 
+    public void test_resumeButLess40() {  // Test if the resume button is pressed, the car does not turn on as no stored speed and carspeed < 40km/hr
     	String[] input_lines = { "true 75.0 0.0 1.0 false false false false false",
 			     "- 30.0 - - - - - - true",
 			     "- - - - - - - - -"};
@@ -190,7 +189,7 @@ public class BasicTests {
    	assertTrue(final_state.get_throttle_position() == 1.0);
     }
     @Test
-    public void test_engineoff() { //If engine is off, ccs remains off if button is pressed.
+    public void test_engineoff() { //Test to see if engine is off, ccs remains off if button is pressed.
     	String[] input_lines = { "false 50.0 0.0 1.0 false false false false false",
 			     "- - - 0.0 true - - - -",};
    	OutputState final_state = get_final_state(input_lines);
@@ -205,7 +204,7 @@ public class BasicTests {
   	assertTrue(final_state.get_throttle_position() == 1.0);
     }
     @Test
-    public void test_resumeWithoutStored () {  //test wether the CCS reacts approprietly to carspeeds unexpected (Via terrain)
+    public void test_resumeWithoutStored () {  //Test wether the resume function works without a storedspeed, correctly turning on CCS
     	String[] input_lines = { "true 75.0 0.0 1.0 false false false false true",
 			     "- - - 0.0 - - - - -",};
   	OutputState final_state = get_final_state(input_lines);
